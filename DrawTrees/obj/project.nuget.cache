@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "WxzPqNrANQkukTgXjQI0TiNlKLoGqODUzkbZWQEYK0TtXPxWWKjvizD5tPNE10n5FvwT1dGIA16lRnvo5TYNbQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\simon\\OneDrive\\DTU\\Kandidat\\Applied Functional Programming\\FsharpDrawingTrees\\DrawTrees\\DrawTrees.fsproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\simon\\.nuget\\packages\\fsharp.core\\7.0.400\\fsharp.core.7.0.400.nupkg.sha512"
+  ],
+  "logs": []
+}
