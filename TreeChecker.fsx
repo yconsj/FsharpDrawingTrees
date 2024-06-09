@@ -17,7 +17,6 @@ let rec mapper l1 l2 =
     | [], qs -> qs
     | ps, [] -> ps
     | p :: ps, q :: qs -> [ List.append p q ] @ mapper ps qs
-    | _ -> []
 
 
 printf "%A" (mapper l1 l2)
@@ -61,15 +60,16 @@ printf "%A\n" (absoluteDistances dTree)
 let rec compareDistances l v =
     match l with
     | [] -> true
-    | x :: y :: t when abs (x - y) > v -> false
     | x :: y :: t when abs (x - y) <= v -> compareDistances (y :: t) v
+    | x :: y :: _ when abs (x - y) > v -> false
+    | _ -> true
 
 let distanceProp tree v =
     let rec compareDistances l =
         match l with
         | [] -> true
         | x :: y :: t when abs (x - y) >= v -> compareDistances (y :: t)
-        | x :: y :: t when abs (x - y) < v -> false
+        | x :: y :: _ when abs (x - y) < v -> false
         | _ -> true
 
     let rec distanceProp' d =
@@ -101,5 +101,16 @@ printf "%A\n" (centerProp dTree)
 
 let test t = distanceProp (design t) 1
 let _ = Check.Quick test
-let _ = Check.Verbose test
+//let _ = Check.Verbose test
 // Property 3
+
+// Reflection/mirror functions sourced from the paper:
+let rec reflect (Node(v, subtrees)) = 
+    Node(v, List.map reflect (List.rev subtrees))
+let rec reflectpos (Node((v, x : float), subtrees)) =
+    Node((v,-x), List.map reflectpos subtrees)
+// i think the paper is incorrect about the equation for the property.
+// note that, for the RHS, t is also reflected prior to calling design:
+let mirrorProp t = design t = reflect(reflectpos(design(reflect(t))))
+let _ = Check.Quick mirrorProp
+
