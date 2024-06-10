@@ -82,24 +82,74 @@ let distanceProp tree v =
     distanceProp' (absoluteDistances tree)
 
 // Property 2
-// check sum of children relative distances is zero
-let sumCheck tl =
-    List.fold (fun acc (Node((a, v), l)) -> v + acc) 0.0 tl
-
-let rec centerProp (t: ('a * float) Tree) : bool =
+// check sum of first and last children distances is zero
+let rec centerProp t =
     match t with
     | Node((a, v), []) -> true
-    | Node((a, v), st) -> if sumCheck st <> 0.0 then false else helper st
+    | Node((a, v), st) ->
+        let (Node((x1, y1), st1)) = List.head st
+        let (Node((x2, y2), st2)) = List.last st
 
-and helper tl =
-    match tl with
-    | x :: y -> centerProp x || helper tl
-    | [] -> true
+        if (y1 + y2) <> 0.0 then
+            false
+        else
+            List.fold (fun acc elem -> acc && centerProp elem) true st
 
-printf "%A\n" (centerProp dTree)
+printf "Prop 2: %A\n" (centerProp dTree)
 
 
-let test t = distanceProp (design t) 1
-let _ = Check.Quick test
-let _ = Check.Verbose test
+
+
+
 // Property 3
+// left side of subtree = right side of subtree, in negation
+
+let rec symmetryProp (t: ('a * float) Tree) : bool =
+    match t with
+    | Node((_, v), []) -> true
+    | Node((_, v), (Node((_, v1), _)) :: []) -> if v1 <> 0.0 then false else true
+    | Node((_, v), st) ->
+        let (Node((_, y1), _)) :: l1 = st
+        let (Node((_, y2), _)) :: l2 = List.rev l1
+
+        if abs (y1) <> abs (y2) then
+            false
+        else
+            List.fold (fun acc elem -> symmetryProp elem) true st
+
+printf "%A\n" (symmetryProp dTree)
+
+
+// Prop 4
+
+
+
+
+
+let rec reflect (Node(v, subtrees)) =
+    Node(v, List.map reflect (List.rev subtrees))
+
+let rec reflectpos (Node((v, x: float), subtrees)) =
+    Node((v, -x), List.map reflectpos subtrees)
+
+
+
+let testProp1 t = distanceProp (design t) 1
+
+let testProp2 t = centerProp (design t)
+let testProp3 t = symmetryProp (design t)
+let _ = Check.Quick testProp1
+let _ = Check.Quick testProp2
+let _ = Check.Quick testProp3
+
+
+let temp =
+    Node(
+        ("A", 0.0),
+        [ Node(("B", -1.0), [ Node(("C", 0.0), []); Node(("D", 0.0), []); Node(("E", 0.0), []) ])
+          Node(("F", 0.0), [])
+          Node(("G", 1.0), [ Node(("H", 0.0), []); Node(("I", 0.0), []); Node(("J", 0.0), []) ]) ]
+    )
+
+printf "%A\n" (temp)
+printf "%A\n" (reflect (reflectpos (temp)))
