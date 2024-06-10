@@ -136,10 +136,10 @@ let generateSampleTree<'a> (genA: Gen<'a>) =
     let sampleTree = Gen.sample 5 1 (treeGenSized genA) |> List.head
     sampleTree
 
-
+List.unzip
 let intTreeGen = treeGenSized Arb.generate<int>
 let sampleTree = generateSampleTree Arb.generate<int>
 
-
 printf "%A \n" (sampleTree)
+printf "%A \n" (design sampleTree)
 drawTree (design sampleTree)

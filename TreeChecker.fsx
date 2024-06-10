@@ -102,28 +102,9 @@ printf "Prop 2: %A\n" (centerProp dTree)
 
 
 // Property 3
-// left side of subtree = right side of subtree, in negation
 
-let rec symmetryProp (t: ('a * float) Tree) : bool =
-    match t with
-    | Node((_, v), []) -> true
-    | Node((_, v), (Node((_, v1), _)) :: []) -> if v1 <> 0.0 then false else true
-    | Node((_, v), st) ->
-        let (Node((_, y1), _)) :: l1 = st
-        let (Node((_, y2), _)) :: l2 = List.rev l1
-
-        if abs (y1) <> abs (y2) then
-            false
-        else
-            List.fold (fun acc elem -> symmetryProp elem) true st
-
-printf "%A\n" (symmetryProp dTree)
-
-
-// Prop 4
-
-
-
+// i think the paper is incorrect about the equation for the property.
+// note that, for the RHS, t is also reflected prior to calling design:
 
 
 let rec reflect (Node(v, subtrees)) =
@@ -137,32 +118,101 @@ let rec reflectpos (Node((v, x: float), subtrees)) =
 let testProp1 t = distanceProp (design t) 1
 
 let testProp2 t = centerProp (design t)
-let testProp3 t = symmetryProp (design t)
+
+let testProp3 t =
+    design t = reflect (reflectpos (design (reflect (t))))
+
+
 let _ = Check.Quick testProp1
 let _ = Check.Quick testProp2
 let _ = Check.Quick testProp3
 
-
-let temp =
+let wrongTree =
     Node(
         ("A", 0.0),
         [ Node(("B", -1.0), [ Node(("C", 0.0), []); Node(("D", 0.0), []); Node(("E", 0.0), []) ])
-          Node(("F", 0.0), [])
-          Node(("G", 1.0), [ Node(("H", 0.0), []); Node(("I", 0.0), []); Node(("J", 0.0), []) ]) ]
+          Node(("F", 1), [ Node(("G", 0), [ Node(("H", -2.0), []); Node(("I", 0.0), []); Node(("J", 2.0), []) ]) ]) ]
     )
 
-printf "%A\n" (temp)
-printf "%A\n" (reflect (reflectpos (temp)))
-
-let test t = distanceProp (design t) 1
-let _ = Check.Quick test
-//let _ = Check.Verbose test
-// Property 3
+printf "%A\n" (wrongTree)
+printf "%A\n" (design wrongTree = reflect (reflectpos (design wrongTree)))
 
 
-// i think the paper is incorrect about the equation for the property.
-// note that, for the RHS, t is also reflected prior to calling design:
-let mirrorProp t =
-    design t = reflect (reflectpos (design (reflect (t))))
+printf "%A\n" (relativeDistances (design tree))
 
-let _ = Check.Quick mirrorProp
+
+
+
+
+
+
+let rec compareTrees t1 t2 =
+    match (t1, t2) with
+    | Node((_, v1), []), Node((_, v2), []) when v1 <> v2 -> false
+    | Node((_, v1), []), Node((_, v2), []) when v1 = v2 -> true
+    | Node((_, v1), st1), Node((_, v2), st2) when v1 <> v2 -> false
+    | Node((_, v1), st1), Node((_, v2), st2) when List.length st1 = List.length st2 ->
+        List.fold2 (fun acc elem1 elem2 -> acc && compareTrees elem1 elem2) true st1 st2
+    | _, _ -> false
+
+let rec treeStructure layer t =
+    match t with
+    | Node(_, children) ->
+        let newChildren = List.map (treeStructure (layer + 1)) children
+        Node(layer, newChildren)
+
+let rec removeTreeName t =
+    match t with
+    | Node((_, value), children) ->
+        let newChildren = List.map removeTreeName children
+        Node(value, newChildren)
+
+
+let identicalProp tree =
+    let rec findSubtrees t map =
+        match t with
+        | Node(_, []) -> map
+        | Node(_, children) ->
+            let newMap = Map.add t (treeStructure 0 t) map
+            List.fold (fun acc elem -> findSubtrees elem acc) newMap children
+
+    let map = (findSubtrees (removeTreeName tree) Map.empty)
+
+    Map.forall
+        (fun (Node(_, key1)) elem1 -> Map.forall (fun (Node(_, key2)) elem2 -> not (key1 <> key2 && elem1 = elem2)) map)
+        map
+
+
+
+let wrongIdenticalTree =
+    Node(
+        ("A", 0.0),
+        [ Node(("B", -1.0), [ Node(("C", -0.5), []); Node(("D", 0.0), []); Node(("E", 0.5), []) ])
+          Node(("F", 1.0), [ Node(("G", 0.0), [ Node(("H", -1.0), []); Node(("I", 0.0), []); Node(("J", 1.0), []) ]) ]) ]
+    )
+
+let identicalTree =
+    Node(
+        ("A", 0.0),
+        [ Node(("B", -1.0), [ Node(("C", -0.5), []); Node(("D", 0.0), []); Node(("E", 0.5), []) ])
+          Node(("F", 1.0), [ Node(("G", 0.0), [ Node(("H", -0.5), []); Node(("I", 0.0), []); Node(("J", 0.5), []) ]) ]) ]
+    )
+
+
+
+let t1 =
+    Node(("A", 0.0), [ Node(("C", -1.0), []); Node(("D", 0.0), []); Node(("E", 1.0), []) ])
+
+let t2 =
+    Node(("A", 0.0), [ Node(("C", -2.0), []); Node(("D", 0.0), []); Node(("E", 2.0), []) ])
+
+
+printf "%A\n" (identicalProp (wrongIdenticalTree))
+
+printf "%A\n" (identicalProp (identicalTree))
+
+printf "%A\n" (identicalProp t1)
+
+
+let testProp4 t = identicalProp (design t)
+let _ = Check.Quick testProp3
