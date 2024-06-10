@@ -140,6 +140,27 @@ List.unzip
 let intTreeGen = treeGenSized Arb.generate<int>
 let sampleTree = generateSampleTree Arb.generate<int>
 
-printf "%A \n" (sampleTree)
 printf "%A \n" (design sampleTree)
 drawTree (design sampleTree)
+
+
+
+let t =
+    Node(
+        5,
+        [ Node(4, [ Node(-1, []) ])
+          Node(-3, [ Node(-1, [ Node(-4, []) ]); Node(-5, []) ])
+          Node(4, []) ]
+    )
+
+printf "%A" (design t)
+
+let wrongTree =
+    Node(
+        (5, 0.0),
+        [ Node((4, -1.25), [ Node((-1, 0.0), []) ])
+          Node((-3, 0.25), [ Node((-1, -0.5), [ Node((-4, 0.0), []) ]); Node((-5, 0.5), []) ])
+          Node((4, 1.25), []) ]
+    )
+
+drawTree wrongTree
