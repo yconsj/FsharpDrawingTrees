@@ -1,10 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "WxzPqNrANQkukTgXjQI0TiNlKLoGqODUzkbZWQEYK0TtXPxWWKjvizD5tPNE10n5FvwT1dGIA16lRnvo5TYNbQ==",
+  "dgSpecHash": "EU6fug12thWgKJ68z3I+o2wawUSKt951QT4mE2HELfiNrcbVHW+7wYd+tpjvjDwhoMk08bQJU2LN9ZA3AXU6vw==",
   "success": true,
   "projectFilePath": "C:\\Users\\simon\\OneDrive\\DTU\\Kandidat\\Applied Functional Programming\\FsharpDrawingTrees\\DrawTrees\\DrawTrees.fsproj",
   "expectedPackageFiles": [
-    "C:\\Users\\simon\\.nuget\\packages\\fsharp.core\\7.0.400\\fsharp.core.7.0.400.nupkg.sha512"
+    "C:\\Users\\simon\\.nuget\\packages\\dynamicobj\\2.0.0\\dynamicobj.2.0.0.nupkg.sha512",
+    "C:\\Users\\simon\\.nuget\\packages\\fsharp.core\\7.0.200\\fsharp.core.7.0.200.nupkg.sha512",
+    "C:\\Users\\simon\\.nuget\\packages\\giraffe.viewengine\\1.4.0\\giraffe.viewengine.1.4.0.nupkg.sha512",
+    "C:\\Users\\simon\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
+    "C:\\Users\\simon\\.nuget\\packages\\plotly.net\\4.0.0\\plotly.net.4.0.0.nupkg.sha512"
   ],
   "logs": []
 }

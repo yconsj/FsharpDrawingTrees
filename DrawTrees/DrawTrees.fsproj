@@ -1,12 +1,18 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+      <OutputPath>./Library</OutputPath>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="Tree.fs" />
+    <Compile Include="TreePlotter.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Plotly.NET" Version="4.0.0" />
   </ItemGroup>
 
 </Project>

@@ -33,3 +33,7 @@ C:\Users\simon\OneDrive\DTU\Kandidat\Applied Functional Programming\FsharpDrawin
 C:\Users\simon\OneDrive\DTU\Kandidat\Applied Functional Programming\FsharpDrawingTrees\DrawTrees\Library\DrawTrees.dll
 C:\Users\simon\OneDrive\DTU\Kandidat\Applied Functional Programming\FsharpDrawingTrees\DrawTrees\Library\DrawTrees.pdb
 C:\Users\simon\OneDrive\DTU\Kandidat\Applied Functional Programming\FsharpDrawingTrees\DrawTrees\Library\DrawTrees.xml
+C:\Users\simon\OneDrive\DTU\Kandidat\Applied Functional Programming\FsharpDrawingTrees\DrawTrees\Library\net7.0\DrawTrees.deps.json
+C:\Users\simon\OneDrive\DTU\Kandidat\Applied Functional Programming\FsharpDrawingTrees\DrawTrees\Library\net7.0\DrawTrees.dll
+C:\Users\simon\OneDrive\DTU\Kandidat\Applied Functional Programming\FsharpDrawingTrees\DrawTrees\Library\net7.0\DrawTrees.pdb
+C:\Users\simon\OneDrive\DTU\Kandidat\Applied Functional Programming\FsharpDrawingTrees\DrawTrees\Library\net7.0\DrawTrees.xml
