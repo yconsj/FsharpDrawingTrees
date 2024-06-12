@@ -1,25 +1,15 @@
-#r "DrawTrees/Library/drawTrees.dll"
-#r "nuget: FsCheck"
+#r "DrawTrees/Library/net7.0/drawTrees.dll"
+#r "nuget: FsCheck, 3.0.0-rc3"
 
-open DrawingTrees
+open DrawTrees.Trees
 open FsCheck
-
-
-
-
-
-
-let l1 = [ [ 1; 2 ] ]
-let l2 = [ [ 4 ]; [ 3 ] ]
+open FsCheck.FSharp
 
 let rec mapper l1 l2 =
     match (l1, l2) with
     | [], qs -> qs
     | ps, [] -> ps
     | p :: ps, q :: qs -> [ List.append p q ] @ mapper ps qs
-
-
-printf "%A" (mapper l1 l2)
 
 
 let rec treeToList (t: Tree<'a * float>) : List<List<'a>> =
@@ -42,20 +32,6 @@ let absoluteDistances (tree: Tree<'a * float>) : List<List<float>> =
             @ List.fold (fun acc elem -> mapper acc (absoluteDistances' elem (f + v))) [] d
 
     absoluteDistances' tree 0
-
-let tree =
-    Node(
-        "A",
-        [ Node("B", [ Node("C", []); Node("D", []); Node("E", []) ])
-          Node("F", [ Node("G", [ Node("H", []); Node("I", []); Node("J", []) ]) ]) ]
-    )
-
-let dTree = design tree
-printf "%A \n" tree
-printf "%A \n " dTree
-printf "%A\n" (treeToList dTree)
-printf "%A\n" (relativeDistances dTree)
-printf "%A\n" (absoluteDistances dTree)
 
 let rec compareDistances l v =
     match l with
@@ -95,7 +71,6 @@ let rec centerProp t =
         else
             List.fold (fun acc elem -> acc && centerProp elem) true st
 
-printf "Prop 2: %A\n" (centerProp dTree)
 
 
 
@@ -115,45 +90,10 @@ let rec reflectpos (Node((v, x: float), subtrees)) =
 
 
 
-let testProp1 t = distanceProp (design t) 1
-
-let testProp2 t = centerProp (design t)
-
-let testProp3 t =
-    design t = reflect (reflectpos (design (reflect (t))))
-
-
-let _ = Check.Quick testProp1
-let _ = Check.Quick testProp2
-let _ = Check.Quick testProp3
-
-let wrongTree =
-    Node(
-        ("A", 0.0),
-        [ Node(("B", -1.0), [ Node(("C", 0.0), []); Node(("D", 0.0), []); Node(("E", 0.0), []) ])
-          Node(("F", 1), [ Node(("G", 0), [ Node(("H", -2.0), []); Node(("I", 0.0), []); Node(("J", 2.0), []) ]) ]) ]
-    )
-
-printf "%A\n" (wrongTree)
-printf "%A\n" (design wrongTree = reflect (reflectpos (design wrongTree)))
-
-
-printf "%A\n" (relativeDistances (design tree))
 
 
 
 
-
-
-
-let rec compareTrees t1 t2 =
-    match (t1, t2) with
-    | Node((_, v1), []), Node((_, v2), []) when v1 <> v2 -> false
-    | Node((_, v1), []), Node((_, v2), []) when v1 = v2 -> true
-    | Node((_, v1), st1), Node((_, v2), st2) when v1 <> v2 -> false
-    | Node((_, v1), st1), Node((_, v2), st2) when List.length st1 = List.length st2 ->
-        List.fold2 (fun acc elem1 elem2 -> acc && compareTrees elem1 elem2) true st1 st2
-    | _, _ -> false
 
 let rec treeStructure layer t =
     match t with
@@ -184,20 +124,6 @@ let identicalProp tree =
 
 
 
-let wrongIdenticalTree =
-    Node(
-        ("A", 0.0),
-        [ Node(("B", -1.0), [ Node(("C", -0.5), []); Node(("D", 0.0), []); Node(("E", 0.5), []) ])
-          Node(("F", 1.0), [ Node(("G", 0.0), [ Node(("H", -1.0), []); Node(("I", 0.0), []); Node(("J", 1.0), []) ]) ]) ]
-    )
-
-let identicalTree =
-    Node(
-        ("A", 0.0),
-        [ Node(("B", -1.0), [ Node(("C", -0.5), []); Node(("D", 0.0), []); Node(("E", 0.5), []) ])
-          Node(("F", 1.0), [ Node(("G", 0.0), [ Node(("H", -0.5), []); Node(("I", 0.0), []); Node(("J", 0.5), []) ]) ]) ]
-    )
-
 
 
 let t1 =
@@ -207,12 +133,232 @@ let t2 =
     Node(("A", 0.0), [ Node(("C", -2.0), []); Node(("D", 0.0), []); Node(("E", 2.0), []) ])
 
 
-printf "%A\n" (identicalProp (wrongIdenticalTree))
 
-printf "%A\n" (identicalProp (identicalTree))
 
-printf "%A\n" (identicalProp t1)
 
+let treeGen myGen =
+    let rec subtreeGen n =
+
+        match n with
+        | 0 -> Gen.map (fun v -> Node(v, [])) myGen
+        | _ ->
+            gen {
+                let! children = Gen.choose (0, n / 2)
+                let! grandChildren = Gen.choose (0, n / 2)
+                let! value = myGen
+                let! subtree = Gen.listOfLength children (subtreeGen (grandChildren))
+                return Node(value, subtree)
+            }
+
+    Gen.sized subtreeGen
+
+let intTreeGen = ArbMap.defaults |> ArbMap.generate<int> |> treeGen
+
+let rec subtrees e =
+    let rec helper (st: 'a Tree list) =
+        match st with
+        | [] -> seq []
+        | h :: tail ->
+            seq {
+                yield h
+                yield! helper tail
+            }
+
+    match e with
+    | Node(_, subtree) -> helper subtree
+
+type GenericTreeGenerators =
+    static member generic<'a>(contents: Arbitrary<'a>) =
+        { new Arbitrary<'a Tree>() with
+            override x.Generator = contents.Generator |> treeGen
+            override x.Shrinker e = subtrees e }
+
+type IntTreeGenerators =
+    static member int() =
+        { new Arbitrary<int Tree>() with
+            override x.Generator = intTreeGen
+            override x.Shrinker e = subtrees e }
+
+
+let sampleProperty (tree: 'a Tree) =
+    printfn "Generated tree: \n %A \n" tree
+    true
+
+
+
+let testProp1 t = (distanceProp (design t) 1)
+
+let testProp2 t = centerProp (design t)
+
+let testProp3 t =
+    design t = reflect (reflectpos (design (reflect (t))))
 
 let testProp4 t = identicalProp (design t)
-let _ = Check.Quick testProp3
+
+
+
+
+let rec ensureValidTree (t: int Tree) =
+    match t with
+    | Node(v, []) ->
+        let leftT = (Gen.sample 1 (intTreeGen))[0]
+
+        let rightT = (Gen.sample 1 (intTreeGen))[0]
+
+        Node(v, [ leftT; rightT ])
+    | Node(v, x :: []) -> ensureValidTree x
+    | Node(_, _) -> t
+// The tree neads atleast one node with 2 branches
+let rec isValidTree t =
+    match t with
+    | Node(_, x :: y :: z) -> true
+    | Node(_, x :: []) -> isValidTree x
+    | Node(_, _) -> false
+
+let rec isValidSubtrees tree =
+    let rec findSubtrees t map =
+        match t with
+        | Node(_, []) -> map
+        | Node(_, children) ->
+            match Map.tryFind (treeStructure 0 t) map with
+            | Some(x) ->
+                let v = Map.find (treeStructure 0 t) map
+                let newMap = Map.add (treeStructure 0 t) (v + 1) map
+                List.fold (fun acc elem -> findSubtrees elem acc) newMap children
+            | None ->
+                let newMap = Map.add (treeStructure 0 t) 1 map
+                List.fold (fun acc elem -> findSubtrees elem acc) newMap children
+
+
+    let map = (findSubtrees tree Map.empty)
+
+    Map.exists (fun k v -> v > 1) map
+
+let ensureValidSubtree t =
+    let rec helper t subtree =
+        match t with
+        | Node(v1, Node(v2, x) :: Node(v3, y) :: z) -> Node(v1, Node(v2, subtree :: x) :: Node(v3, subtree :: y) :: z)
+        | Node(_, x :: []) -> helper x t
+
+    match isValidSubtrees t with
+    | true -> t
+    | false ->
+        let newT = ensureValidTree t
+        let newSubtree = (Gen.sample 1 (intTreeGen))[0]
+        helper newT newSubtree
+
+let rec treeSize t =
+    let rec helper acc t =
+        match t with
+        | Node(_, []) -> acc + 1
+        | Node(_, c) -> List.fold helper (acc + 1) c
+
+    helper 0 t
+
+
+
+let atleastMinimalTree =
+    Arb.mapFilter ensureValidTree isValidTree (ArbMap.defaults.ArbFor<int Tree>())
+
+let atleastMinimalSubtrees =
+    Arb.mapFilter ensureValidSubtree isValidSubtrees (ArbMap.defaults.ArbFor<int Tree>())
+
+
+
+let prop1Classify x =
+    (testProp1 x
+     |> Prop.classify ((isValidSubtrees x)) "valid subtrees"
+     |> Prop.classify (treeSize x < 2) "false precondition"
+     |> Prop.classify ((isValidTree x)) "at least 2 branches")
+
+let prop2Classify x =
+    (testProp2 x
+     |> Prop.classify ((isValidSubtrees x)) "valid subtrees"
+     |> Prop.classify (treeSize x < 2) "false precondition"
+     |> Prop.classify ((isValidTree x)) "at least 2 branches")
+
+let prop3Classify x =
+    (testProp3 x
+     |> Prop.classify ((isValidSubtrees x)) "valid subtrees"
+     |> Prop.classify (treeSize x < 2) "false precondition"
+     |> Prop.classify ((isValidTree x)) "at least 2 branches")
+
+let prop4Classify x =
+    (testProp4 x
+     |> Prop.classify ((isValidSubtrees x)) "valid subtrees"
+     |> Prop.classify (treeSize x < 2) "false precondition"
+     |> Prop.classify ((isValidTree x)) "at least 2 branches")
+
+let prop1WithArbClassify =
+    Prop.forAll atleastMinimalTree (fun x ->
+        testProp1 x
+        |> Prop.classify ((isValidSubtrees x)) "valid subtrees"
+        |> Prop.classify (treeSize x < 2) "false precondition"
+        |> Prop.classify ((isValidTree x)) "at least 2 branches")
+
+let prop2WithArbClassify =
+    Prop.forAll atleastMinimalTree (fun x ->
+        testProp2 x
+        |> Prop.classify ((isValidSubtrees x)) "valid subtrees"
+        |> Prop.classify (treeSize x < 2) "false precondition"
+        |> Prop.classify ((isValidTree x)) "at least 2 branches")
+
+let prop3WithArbClassify =
+    Prop.forAll atleastMinimalTree (fun x ->
+        testProp3 x
+        |> Prop.classify ((isValidSubtrees x)) "valid subtrees"
+        |> Prop.classify (treeSize x < 2) "false precondition"
+        |> Prop.classify ((isValidTree x)) "at least 2 branches")
+
+let prop4WithArbClassify =
+    Prop.forAll atleastMinimalSubtrees (fun x ->
+        testProp4 x
+        |> Prop.classify ((isValidSubtrees x)) "valid subtrees"
+        |> Prop.classify (treeSize x < 2) "false precondition"
+        |> Prop.classify ((isValidTree x)) "at least 2 branches")
+
+type ListPropertiesClassify =
+    static member ``prop1``(t: int Tree) = prop1Classify t
+    static member ``prop2``(t: int Tree) = prop2Classify t
+    static member ``prop3``(t: int Tree) = prop3Classify t
+    static member ``prop4``(t: int Tree) = prop4Classify t
+
+
+type ListPropertiesWithArbClassify =
+    static member ``prop1WithArbClassify``() = prop1WithArbClassify
+    static member ``prop2WithArbClassify``() = prop2WithArbClassify
+    static member ``prop3WithArbClassify``() = prop3WithArbClassify
+    static member ``prop4WithArbClassify``() = prop4WithArbClassify
+
+let config = Config.Quick.WithArbitrary([ typeof<IntTreeGenerators> ])
+
+Check.All(config, typeof<ListPropertiesClassify>)
+Check.All(config, typeof<ListPropertiesWithArbClassify>)
+
+
+//Check.One(config, testProp1)
+//Check.One(config, testProp2)
+//Check.One(config, testProp3)
+//Check.One(config, testProp4)
+
+//Check.All(config, typeof<ListProperties>)
+//let _ = Check.Quick sampleProperty
+let wrongTree =
+    Node(
+        ("A", 0.0),
+        [ Node(("B", -0.5), [ Node(("E", -0.5), []) ])
+          Node(("C", -1), [ Node(("F", 0), []) ]) ]
+    )
+
+let badReflection =
+    Node(
+        ("A", 0.0),
+        [ Node(("B", -0.5), [ Node(("E", 0), []) ])
+          Node(("C", -1), [ Node(("F", -0.5), []) ]) ]
+    )
+
+
+printf "%A\n" (distanceProp wrongTree 1)
+printf "%A\n" (centerProp wrongTree)
+printf "%A\n" (wrongTree = reflect (reflectpos (badReflection)))
+printf "%A\n" (identicalProp wrongTree)
