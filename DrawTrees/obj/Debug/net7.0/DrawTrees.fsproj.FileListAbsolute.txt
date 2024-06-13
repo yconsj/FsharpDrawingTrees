@@ -37,3 +37,17 @@ C:\Users\simon\OneDrive\DTU\Kandidat\Applied Functional Programming\FsharpDrawin
 C:\Users\simon\OneDrive\DTU\Kandidat\Applied Functional Programming\FsharpDrawingTrees\DrawTrees\Library\net7.0\DrawTrees.dll
 C:\Users\simon\OneDrive\DTU\Kandidat\Applied Functional Programming\FsharpDrawingTrees\DrawTrees\Library\net7.0\DrawTrees.pdb
 C:\Users\simon\OneDrive\DTU\Kandidat\Applied Functional Programming\FsharpDrawingTrees\DrawTrees\Library\net7.0\DrawTrees.xml
+C:\Users\augus\Desktop\Main folder\University\Master\4. Semester\AppliedFunctionalProgramming\FsharpDrawingTrees\DrawTrees\Library\net7.0\DrawTrees.deps.json
+C:\Users\augus\Desktop\Main folder\University\Master\4. Semester\AppliedFunctionalProgramming\FsharpDrawingTrees\DrawTrees\Library\net7.0\DrawTrees.dll
+C:\Users\augus\Desktop\Main folder\University\Master\4. Semester\AppliedFunctionalProgramming\FsharpDrawingTrees\DrawTrees\Library\net7.0\DrawTrees.pdb
+C:\Users\augus\Desktop\Main folder\University\Master\4. Semester\AppliedFunctionalProgramming\FsharpDrawingTrees\DrawTrees\Library\net7.0\DrawTrees.xml
+C:\Users\augus\Desktop\Main folder\University\Master\4. Semester\AppliedFunctionalProgramming\FsharpDrawingTrees\DrawTrees\obj\Debug\net7.0\DrawTrees.fsproj.AssemblyReference.cache
+C:\Users\augus\Desktop\Main folder\University\Master\4. Semester\AppliedFunctionalProgramming\FsharpDrawingTrees\DrawTrees\obj\Debug\net7.0\DrawTrees.AssemblyInfoInputs.cache
+C:\Users\augus\Desktop\Main folder\University\Master\4. Semester\AppliedFunctionalProgramming\FsharpDrawingTrees\DrawTrees\obj\Debug\net7.0\DrawTrees.AssemblyInfo.fs
+C:\Users\augus\Desktop\Main folder\University\Master\4. Semester\AppliedFunctionalProgramming\FsharpDrawingTrees\DrawTrees\obj\Debug\net7.0\DrawTrees.fsproj.CoreCompileInputs.cache
+C:\Users\augus\Desktop\Main folder\University\Master\4. Semester\AppliedFunctionalProgramming\FsharpDrawingTrees\DrawTrees\obj\Debug\net7.0\DrawTrees.sourcelink.json
+C:\Users\augus\Desktop\Main folder\University\Master\4. Semester\AppliedFunctionalProgramming\FsharpDrawingTrees\DrawTrees\obj\Debug\net7.0\DrawTrees.dll
+C:\Users\augus\Desktop\Main folder\University\Master\4. Semester\AppliedFunctionalProgramming\FsharpDrawingTrees\DrawTrees\obj\Debug\net7.0\refint\DrawTrees.dll
+C:\Users\augus\Desktop\Main folder\University\Master\4. Semester\AppliedFunctionalProgramming\FsharpDrawingTrees\DrawTrees\obj\Debug\net7.0\DrawTrees.xml
+C:\Users\augus\Desktop\Main folder\University\Master\4. Semester\AppliedFunctionalProgramming\FsharpDrawingTrees\DrawTrees\obj\Debug\net7.0\DrawTrees.pdb
+C:\Users\augus\Desktop\Main folder\University\Master\4. Semester\AppliedFunctionalProgramming\FsharpDrawingTrees\DrawTrees\obj\Debug\net7.0\ref\DrawTrees.dll

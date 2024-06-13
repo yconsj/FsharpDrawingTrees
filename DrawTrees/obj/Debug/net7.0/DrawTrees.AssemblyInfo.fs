@@ -10,7 +10,7 @@ open System.Reflection
 [<assembly: System.Reflection.AssemblyCompanyAttribute("DrawTrees")>]
 [<assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")>]
 [<assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")>]
-[<assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")>]
+[<assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f96b4c849a7d415f739930949ff7df46ad9b5b01")>]
 [<assembly: System.Reflection.AssemblyProductAttribute("DrawTrees")>]
 [<assembly: System.Reflection.AssemblyTitleAttribute("DrawTrees")>]
 [<assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")>]

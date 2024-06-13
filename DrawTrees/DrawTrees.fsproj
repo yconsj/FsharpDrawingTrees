@@ -9,6 +9,7 @@
   <ItemGroup>
     <Compile Include="Tree.fs" />
     <Compile Include="TreePlotter.fs" />
+    <Compile Include="TreeExamples.fs" />
   </ItemGroup>
 
   <ItemGroup>

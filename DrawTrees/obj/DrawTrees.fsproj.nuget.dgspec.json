@@ -1,26 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\simon\\OneDrive\\DTU\\Kandidat\\Applied Functional Programming\\FsharpDrawingTrees\\DrawTrees\\DrawTrees.fsproj": {}
+    "C:\\Users\\augus\\Desktop\\Main folder\\University\\Master\\4. Semester\\AppliedFunctionalProgramming\\FsharpDrawingTrees\\DrawTrees\\DrawTrees.fsproj": {}
   },
   "projects": {
-    "C:\\Users\\simon\\OneDrive\\DTU\\Kandidat\\Applied Functional Programming\\FsharpDrawingTrees\\DrawTrees\\DrawTrees.fsproj": {
+    "C:\\Users\\augus\\Desktop\\Main folder\\University\\Master\\4. Semester\\AppliedFunctionalProgramming\\FsharpDrawingTrees\\DrawTrees\\DrawTrees.fsproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\simon\\OneDrive\\DTU\\Kandidat\\Applied Functional Programming\\FsharpDrawingTrees\\DrawTrees\\DrawTrees.fsproj",
+        "projectUniqueName": "C:\\Users\\augus\\Desktop\\Main folder\\University\\Master\\4. Semester\\AppliedFunctionalProgramming\\FsharpDrawingTrees\\DrawTrees\\DrawTrees.fsproj",
         "projectName": "DrawTrees",
-        "projectPath": "C:\\Users\\simon\\OneDrive\\DTU\\Kandidat\\Applied Functional Programming\\FsharpDrawingTrees\\DrawTrees\\DrawTrees.fsproj",
-        "packagesPath": "C:\\Users\\simon\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\simon\\OneDrive\\DTU\\Kandidat\\Applied Functional Programming\\FsharpDrawingTrees\\DrawTrees\\obj\\",
+        "projectPath": "C:\\Users\\augus\\Desktop\\Main folder\\University\\Master\\4. Semester\\AppliedFunctionalProgramming\\FsharpDrawingTrees\\DrawTrees\\DrawTrees.fsproj",
+        "packagesPath": "C:\\Users\\augus\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\augus\\Desktop\\Main folder\\University\\Master\\4. Semester\\AppliedFunctionalProgramming\\FsharpDrawingTrees\\DrawTrees\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\simon\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\augus\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
         ],
         "sources": {
-          "C:\\Program Files\\dotnet\\sdk\\7.0.203\\FSharp\\library-packs": {},
+          "C:\\Program Files\\dotnet\\sdk\\8.0.301\\FSharp\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -28,6 +28,11 @@
             "targetAlias": "net7.0",
             "projectReferences": {}
           }
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -37,7 +42,7 @@
             "FSharp.Core": {
               "include": "Runtime, Compile, Build, Native, Analyzers, BuildTransitive",
               "target": "Package",
-              "version": "[7.0.200, )",
+              "version": "[8.0.300, )",
               "generatePathProperty": true
             },
             "Plotly.NET": {
@@ -57,12 +62,26 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[7.0.20, 7.0.20]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[7.0.20, 7.0.20]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[7.0.20, 7.0.20]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.301\\RuntimeIdentifierGraph.json"
         }
       }
     }
