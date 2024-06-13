@@ -83,7 +83,7 @@ let drawTreeV1 t =
 
         match tree with
         | Node((a, v), []) ->
-            let formatted = (formatter a 2)
+            let formatted = (formatter a 5)
 
             let offset =
                 if (float formatted.Length) = 1 then
@@ -98,7 +98,7 @@ let drawTreeV1 t =
 
 
         | Node((a, v), st) ->
-            let formatted = (formatter a 2)
+            let formatted = (formatter a 5)
 
             let offset =
                 if (float formatted.Length) = 1 then
@@ -119,10 +119,10 @@ let drawTreeV1 t =
     // Starting at root - shouldnt draw a line
     match t with
     | Node((a, v), []) ->
-        let formatted = (formatter a 2)
+        let formatted = (formatter a 5)
         addPoint (0.0, 0.0) (String.concat "<br>" formatted) Seq.empty
     | Node((a, v), st) ->
-        let formatted = (formatter a 2)
+        let formatted = (formatter a 5)
 
         let offset =
             if (float formatted.Length) = 1 then
@@ -145,7 +145,7 @@ let drawTreeV2 t =
 
         match tree with
         | Node((a, v), []) ->
-            let formatted = (formatter a 2)
+            let formatted = (formatter a 5)
 
             let offset =
                 if (float formatted.Length) = 1 then
@@ -160,7 +160,7 @@ let drawTreeV2 t =
 
 
         | Node((a, v), st) ->
-            let formatted = (formatter a 2)
+            let formatted = (formatter a 5)
 
             let offset =
                 if (float formatted.Length) = 1 then
@@ -191,7 +191,7 @@ let drawTreeV2 t =
     match t with
     | Node((a, v), []) -> addPoint (0.0, 0.0) a Seq.empty
     | Node((a, v), st) ->
-        let formatted = (formatter a 2)
+        let formatted = (formatter a 5)
 
         let offset =
             if (float formatted.Length) = 1 then
@@ -210,6 +210,7 @@ let drawTreeV2 t =
     |> Chart.combine
     |> Chart.withXAxis mirroredXAxis
     |> Chart.withYAxis mirroredYAxis
+    |> Chart.withSize(900.0,700.0)
     |> Chart.show
 
 
@@ -314,8 +315,38 @@ let simpleTree =
         ])
         ]
     )
+
+let codeStructureTree = Node("ProjectFolder/", [
+    Node("DrawTrees/",[
+        Node("bin/",[
+            Node("...",[])
+        ]);
+        Node("Library/",[
+            Node("net7.0/",[
+                Node("DrawTrees.deps.json",[])
+                Node("DrawTrees.dll",[]);
+                Node("DrawTrees.pdb",[]);
+                Node("DrawTrees.xml",[])
+            ])
+        ]);
+        Node("obj/",[
+            Node("Debug/",[
+                Node("...",[]);
+            ]);
+            Node("DrawTrees.dll",[]);
+            Node("...",[]);
+        ]);
+        Node("DrawTrees.fsproj",[]);
+        Node("Tree.fs",[]);
+        Node("TreePlotter.fs",[])
+    ]);
+    Node("TreePlotter.fsx",[]);
+    Node("TreePropertyTesting.fsx",[]);
+])
+
+
 let renderTree b t =
     if b then drawTreeV1 t else drawTreeV2 t
 
-printf "%A" (design largeTree)
-renderTree false (design largeTree)
+//printf "%A" (design codeStructureTree)
+renderTree false (design codeStructureTree)
