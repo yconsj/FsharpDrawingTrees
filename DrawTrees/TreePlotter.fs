@@ -56,7 +56,7 @@ module PlotTrees =
         let charL = List.splitInto (max (l.Length / sep) 1) l
         List.map (fun elem -> System.String(elem |> List.toArray)) charL
 
-    let drawTreeV1 t =
+    let drawTreeSimple t =
         let rec drawTreeChildren tree parent seq =
             let (parentX, parentY, parentOffset) = parent
 
@@ -92,7 +92,8 @@ module PlotTrees =
                     addLine (parentX, parentY - parentOffset) (parentX + v, parentY - 1.0 + offset) temp
 
                 List.fold
-                    (fun acc elem -> Seq.append acc (drawTreeChildren elem (parentX + v, parentY - 1.0, offset)  Seq.empty))
+                    (fun acc elem ->
+                        Seq.append acc (drawTreeChildren elem (parentX + v, parentY - 1.0, offset) Seq.empty))
                     seq
                     st
 
@@ -111,15 +112,9 @@ module PlotTrees =
                     (float formatted.Length) * 0.075
 
             let seq = addPoint (0.0, 0.0) (String.concat "<br>" formatted) Seq.empty
-            List.fold (fun acc elem -> Seq.append acc (drawTreeChildren elem (0.0, 0.0, offset)  Seq.empty)) seq st
+            List.fold (fun acc elem -> Seq.append acc (drawTreeChildren elem (0.0, 0.0, offset) Seq.empty)) seq st
 
-        |> Chart.combine
-        |> Chart.withXAxis mirroredXAxis
-        |> Chart.withYAxis mirroredYAxis
-        |> Chart.show
-
-
-    let drawTreeV2 t =
+    let drawTreePrettier t =
         let rec drawTreeChildren tree parent seq =
             let (parentX, parentY) = parent
 
@@ -166,7 +161,7 @@ module PlotTrees =
                 let seq = addPoint (parentX + v, parentY - 1.0) (String.concat "<br>" formatted) seq
 
                 List.fold
-                    (fun acc elem -> Seq.append acc (drawTreeChildren elem (parentX + v, parentY - 1.0)  Seq.empty))
+                    (fun acc elem -> Seq.append acc (drawTreeChildren elem (parentX + v, parentY - 1.0) Seq.empty))
                     seq
                     st
 
@@ -187,12 +182,20 @@ module PlotTrees =
             let (Node((_, vfirst), _)) = st.Head
             let (Node((_, vlast), _)) = (List.rev st).Head
             let seq = addLine (vfirst, -0.5) (vlast, -0.5) seq
-            List.fold (fun acc elem -> Seq.append acc (drawTreeChildren elem (0.0, 0.0)  Seq.empty)) seq st
+            List.fold (fun acc elem -> Seq.append acc (drawTreeChildren elem (0.0, 0.0) Seq.empty)) seq st
 
-        |> Chart.combine
-        |> Chart.withXAxis mirroredXAxis
-        |> Chart.withYAxis mirroredYAxis
-        |> Chart.show
 
-    let renderTree b t =
-        if b then drawTreeV1 t else drawTreeV2 t
+
+    let visualizeTree t b =
+        if b then
+            drawTreeSimple t
+            |> Chart.combine
+            |> Chart.withXAxis mirroredXAxis
+            |> Chart.withYAxis mirroredYAxis
+            |> Chart.show
+        else
+            drawTreePrettier t
+            |> Chart.combine
+            |> Chart.withXAxis mirroredXAxis
+            |> Chart.withYAxis mirroredYAxis
+            |> Chart.show
