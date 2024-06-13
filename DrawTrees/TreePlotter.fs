@@ -1,5 +1,7 @@
+// @author Simon Janum
+// @author August Valentin
+// @date 13/6/2024
 namespace DrawTrees
-
 
 module PlotTrees =
     open Plotly.NET
@@ -141,7 +143,6 @@ module PlotTrees =
                         0.1
                     else
                         (float formatted.Length) * 0.08
-
 
                 let seq =
                     addLine (parentX + v, parentY - 1.0 + offset) (parentX + v, parentY + 0.5 - 1.0) Seq.empty // line up

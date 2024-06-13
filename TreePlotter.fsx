@@ -5,7 +5,9 @@ open Plotly.NET
 open DrawTrees.Trees
 open DrawTrees.TreeExamples
 open Plotly.NET.LayoutObjects // this namespace contains all object abstractions for layout styling
-
+// @author Simon Janum
+// @author August Valentin
+// @date 13/6/2024
 
 let mirroredXAxis =
     LinearAxis.init (
@@ -69,6 +71,7 @@ let addPoint p name seq =
 let addLine (x1, y1) (x2, y2) seq =
     let lSeq =
         Seq.singleton (Chart.Line([ x1; x2 ], [ y1; y2 ], LineColor = Color.fromString "green", ShowLegend = false))
+
     Seq.append seq lSeq
 
 let formatter a sep =
@@ -112,8 +115,9 @@ let drawTreeV1 t =
 
             let seq =
                 addLine (parentX, parentY - parentOffset) (parentX + v, parentY - 1.0 + offset) temp
+
             List.fold
-                (fun acc elem -> Seq.append acc (drawTreeChildren elem (parentX + v, parentY - 1.0, offset)  Seq.empty))
+                (fun acc elem -> Seq.append acc (drawTreeChildren elem (parentX + v, parentY - 1.0, offset) Seq.empty))
                 seq
                 st
 
@@ -186,7 +190,10 @@ let drawTreeV2 t =
 
             let seq = addPoint (parentX + v, parentY - 1.0) (String.concat "<br>" formatted) seq
 
-            List.fold (fun acc elem -> Seq.append acc (drawTreeChildren elem (parentX + v, parentY - 1.0) Seq.empty)) seq st
+            List.fold
+                (fun acc elem -> Seq.append acc (drawTreeChildren elem (parentX + v, parentY - 1.0) Seq.empty))
+                seq
+                st
 
     // Starting at root - shouldnt draw a line
     match t with
@@ -205,13 +212,13 @@ let drawTreeV2 t =
         let (Node((_, vfirst), _)) = st.Head
         let (Node((_, vlast), _)) = (List.rev st).Head
         let seq = addLine (vfirst, -0.5) (vlast, -0.5) seq
-        
+
         List.fold (fun acc elem -> Seq.append acc (drawTreeChildren elem (0.0, 0.0) Seq.empty)) seq st
 
     |> Chart.combine
     |> Chart.withXAxis mirroredXAxis
     |> Chart.withYAxis mirroredYAxis
-    |> Chart.withSize(900.0,700.0)
+    |> Chart.withSize (900.0, 700.0)
     |> Chart.show
 
 

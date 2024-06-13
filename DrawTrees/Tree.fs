@@ -1,3 +1,6 @@
+// @author Simon Janum
+// @author August Valentin
+// @date 13/6/2024
 namespace DrawTrees
 
 module Trees =

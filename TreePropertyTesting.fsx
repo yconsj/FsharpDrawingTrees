@@ -6,6 +6,9 @@ open DrawTrees.Trees
 open FsCheck
 open FsCheck.FSharp
 open FsUnit
+// @author Simon Janum
+// @author August Valentin
+// @date 13/6/2024
 
 let rec mapper l1 l2 =
     match (l1, l2) with
@@ -60,7 +63,6 @@ let distanceProp tree v =
     distanceProp' (absoluteDistances tree)
 
 // Property 2
-// check sum of first and last children distances is zero
 let rec centerProp t =
     match t with
     | Node((a, v), []) -> true
@@ -80,20 +82,11 @@ let rec centerProp t =
 
 // Property 3
 
-// i think the paper is incorrect about the equation for the property.
-// note that, for the RHS, t is also reflected prior to calling design:
-
-
 let rec reflect (Node(v, subtrees)) =
     Node(v, List.map reflect (List.rev subtrees))
 
 let rec reflectpos (Node((v, x: float), subtrees)) =
     Node((v, -x), List.map reflectpos subtrees)
-
-
-
-
-
 
 
 
@@ -182,12 +175,6 @@ type IntTreeGenerators =
             override x.Shrinker e = subtrees e }
 
 
-let sampleProperty (tree: 'a Tree) =
-    printfn "Generated tree: \n %A \n" tree
-    true
-
-
-
 let testProp1 t = (distanceProp (design t) 1)
 
 let testProp2 t = centerProp (design t)
@@ -249,7 +236,6 @@ let ensureMatchingSubtrees t =
     match hasMatchingSubtrees t with
     | true -> t
     | false ->
-        let newT = ensureProperTree t
         let subtree = (Gen.sample 1 (intTreeGen))[0]
 
         match t with
