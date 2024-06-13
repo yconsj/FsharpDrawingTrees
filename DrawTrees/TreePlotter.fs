@@ -62,7 +62,7 @@ module PlotTrees =
 
             match tree with
             | Node((a, v), []) ->
-                let formatted = (formatter a 5)
+                let formatted = (formatter a 7)
 
                 let offset =
                     if (float formatted.Length) = 1 then
@@ -77,7 +77,7 @@ module PlotTrees =
 
 
             | Node((a, v), st) ->
-                let formatted = (formatter a 5)
+                let formatted = (formatter a 7)
 
                 let offset =
                     if (float formatted.Length) = 1 then
@@ -99,10 +99,10 @@ module PlotTrees =
         // Starting at root - shouldnt draw a line
         match t with
         | Node((a, v), []) ->
-            let formatted = (formatter a 5)
+            let formatted = (formatter a 7)
             addPoint (0.0, 0.0) (String.concat "<br>" formatted) Seq.empty
         | Node((a, v), st) ->
-            let formatted = (formatter a 5)
+            let formatted = (formatter a 7)
 
             let offset =
                 if (float formatted.Length) = 1 then
@@ -119,7 +119,7 @@ module PlotTrees =
 
             match tree with
             | Node((a, v), []) ->
-                let formatted = (formatter a 5)
+                let formatted = (formatter a 7)
 
                 let offset =
                     if (float formatted.Length) = 1 then
@@ -134,7 +134,7 @@ module PlotTrees =
 
 
             | Node((a, v), st) ->
-                let formatted = (formatter a 5)
+                let formatted = (formatter a 7)
 
                 let offset =
                     if (float formatted.Length) = 1 then
@@ -165,7 +165,7 @@ module PlotTrees =
         match t with
         | Node((a, v), []) -> addPoint (0.0, 0.0) a Seq.empty
         | Node((a, v), st) ->
-            let formatted = (formatter a 5)
+            let formatted = (formatter a 7)
 
             let offset =
                 if (float formatted.Length) = 1 then
