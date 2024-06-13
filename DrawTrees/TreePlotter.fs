@@ -57,95 +57,94 @@ module PlotTrees =
         List.map (fun elem -> System.String(elem |> List.toArray)) charL
 
     let drawTreeSimple t =
-        let rec drawTreeChildren tree parent seq =
+        let rec drawTreeChildren tree parent =
             let (parentX, parentY, parentOffset) = parent
 
             match tree with
             | Node((a, v), []) ->
-                let formatted = (formatter a 2)
+                let formatted = (formatter a 5)
 
                 let offset =
                     if (float formatted.Length) = 1 then
                         0.1
                     else
-                        (float formatted.Length) * 0.075
+                        (float formatted.Length) * 0.08
 
-                let temp =
-                    addPoint (parentX + v, parentY - 1.0) (String.concat "<br>" formatted) seq
+                let seq =
+                    addPoint (parentX + v, parentY - 1.0) (String.concat "<br>" formatted) Seq.empty
 
-                addLine (parentX, parentY - parentOffset) (parentX + v, parentY - 1.0 + offset) temp
+                addLine (parentX, parentY - parentOffset) (parentX + v, parentY - 1.0 + offset) seq
 
 
             | Node((a, v), st) ->
-                let formatted = (formatter a 2)
+                let formatted = (formatter a 5)
 
                 let offset =
                     if (float formatted.Length) = 1 then
                         0.1
                     else
-                        (float formatted.Length) * 0.075
-
-                let temp =
-                    addPoint (parentX + v, parentY - 1.0) (String.concat "<br>" formatted) seq
+                        (float formatted.Length) * 0.08
 
                 let seq =
-                    addLine (parentX, parentY - parentOffset) (parentX + v, parentY - 1.0 + offset) temp
+                    addPoint (parentX + v, parentY - 1.0) (String.concat "<br>" formatted) Seq.empty
+
+                let seq =
+                    addLine (parentX, parentY - parentOffset) (parentX + v, parentY - 1.0 + offset) seq
 
                 List.fold
-                    (fun acc elem ->
-                        Seq.append acc (drawTreeChildren elem (parentX + v, parentY - 1.0, offset) Seq.empty))
+                    (fun acc elem -> Seq.append acc (drawTreeChildren elem (parentX + v, parentY - 1.0, offset)))
                     seq
                     st
 
         // Starting at root - shouldnt draw a line
         match t with
         | Node((a, v), []) ->
-            let formatted = (formatter a 2)
+            let formatted = (formatter a 5)
             addPoint (0.0, 0.0) (String.concat "<br>" formatted) Seq.empty
         | Node((a, v), st) ->
-            let formatted = (formatter a 2)
+            let formatted = (formatter a 5)
 
             let offset =
                 if (float formatted.Length) = 1 then
                     0.1
                 else
-                    (float formatted.Length) * 0.075
+                    (float formatted.Length) * 0.08
 
             let seq = addPoint (0.0, 0.0) (String.concat "<br>" formatted) Seq.empty
-            List.fold (fun acc elem -> Seq.append acc (drawTreeChildren elem (0.0, 0.0, offset) Seq.empty)) seq st
+            List.fold (fun acc elem -> Seq.append acc (drawTreeChildren elem (0.0, 0.0, offset))) seq st
 
     let drawTreePrettier t =
-        let rec drawTreeChildren tree parent seq =
+        let rec drawTreeChildren tree parent =
             let (parentX, parentY) = parent
 
             match tree with
             | Node((a, v), []) ->
-                let formatted = (formatter a 2)
+                let formatted = (formatter a 5)
 
                 let offset =
                     if (float formatted.Length) = 1 then
                         0.1
                     else
-                        (float formatted.Length) * 0.075
+                        (float formatted.Length) * 0.08
 
                 let seq =
-                    addLine (parentX + v, parentY - 1.0 + offset) (parentX + v, parentY + 0.5 - 1.0) seq
+                    addLine (parentX + v, parentY - 1.0 + offset) (parentX + v, parentY + 0.5 - 1.0) Seq.empty
 
                 addPoint (parentX + v, parentY - 1.0) (String.concat "<br>" formatted) seq
 
 
             | Node((a, v), st) ->
-                let formatted = (formatter a 2)
+                let formatted = (formatter a 5)
 
                 let offset =
                     if (float formatted.Length) = 1 then
                         0.1
                     else
-                        (float formatted.Length) * 0.075
+                        (float formatted.Length) * 0.08
 
 
                 let seq =
-                    addLine (parentX + v, parentY - 1.0 + offset) (parentX + v, parentY + 0.5 - 1.0) seq // line up
+                    addLine (parentX + v, parentY - 1.0 + offset) (parentX + v, parentY + 0.5 - 1.0) Seq.empty // line up
 
                 let seq =
                     addLine (parentX + v, parentY - 1.0 - offset) (parentX + v, parentY - 0.5 - 1.0) seq // Down line
@@ -160,29 +159,26 @@ module PlotTrees =
 
                 let seq = addPoint (parentX + v, parentY - 1.0) (String.concat "<br>" formatted) seq
 
-                List.fold
-                    (fun acc elem -> Seq.append acc (drawTreeChildren elem (parentX + v, parentY - 1.0) Seq.empty))
-                    seq
-                    st
+                List.fold (fun acc elem -> Seq.append acc (drawTreeChildren elem (parentX + v, parentY - 1.0))) seq st
 
         // Starting at root - shouldnt draw a line
         match t with
         | Node((a, v), []) -> addPoint (0.0, 0.0) a Seq.empty
         | Node((a, v), st) ->
-            let formatted = (formatter a 2)
+            let formatted = (formatter a 5)
 
             let offset =
                 if (float formatted.Length) = 1 then
                     0.1
                 else
-                    (float formatted.Length) * 0.075
+                    (float formatted.Length) * 0.08
 
             let seq = addPoint (0.0, 0.0) (String.concat "<br>" formatted) Seq.empty
             let seq = addLine (0.0, 0.0 - offset) (0.0, - 0.5) seq
             let (Node((_, vfirst), _)) = st.Head
             let (Node((_, vlast), _)) = (List.rev st).Head
             let seq = addLine (vfirst, -0.5) (vlast, -0.5) seq
-            List.fold (fun acc elem -> Seq.append acc (drawTreeChildren elem (0.0, 0.0) Seq.empty)) seq st
+            List.fold (fun acc elem -> Seq.append acc (drawTreeChildren elem (0.0, 0.0))) seq st
 
 
 

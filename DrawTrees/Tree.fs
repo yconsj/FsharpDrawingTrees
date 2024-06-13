@@ -41,15 +41,15 @@ module Trees =
         fitListl' [] l
 
 
-    let fitListr e =
-        let rec fitListr' acc (e) =
-            match (e) with
+    let fitListr l =
+        let rec fitListr' acc (l) =
+            match (l) with
             | [] -> []
             | (e :: es) ->
                 let x = -1.0 * (fit e acc)
                 x :: fitListr' (merge (moveextent (e, x)) acc) es
 
-        List.rev (fitListr' [] (List.rev e))
+        List.rev (fitListr' [] (List.rev l))
 
     let mean (x, y) = (x + y) / 2.0
 
