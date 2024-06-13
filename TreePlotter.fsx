@@ -1,8 +1,8 @@
 #r "nuget: Plotly.NET, 4.0.0"
-#r "DrawTrees/Library/drawTrees.dll"
+#r "DrawTrees/Library/net7.0/drawTrees.dll"
 
 open Plotly.NET
-open DrawingTrees
+open DrawTrees.Trees
 open Plotly.NET.LayoutObjects // this namespace contains all object abstractions for layout styling
 
 
@@ -68,7 +68,6 @@ let addPoint p name seq =
 let addLine (x1, y1) (x2, y2) seq =
     let lSeq =
         Seq.singleton (Chart.Line([ x1; x2 ], [ y1; y2 ], LineColor = Color.fromString "green", ShowLegend = false))
-
     Seq.append seq lSeq
 
 let formatter a sep =
@@ -112,9 +111,8 @@ let drawTreeV1 t =
 
             let seq =
                 addLine (parentX, parentY - parentOffset) (parentX + v, parentY - 1.0 + offset) temp
-
             List.fold
-                (fun acc elem -> Seq.append acc (drawTreeChildren elem (parentX + v, parentY - 1.0, offset) seq))
+                (fun acc elem -> Seq.append acc (drawTreeChildren elem (parentX + v, parentY - 1.0, offset)  Seq.empty))
                 seq
                 st
 
@@ -133,7 +131,7 @@ let drawTreeV1 t =
                 (float formatted.Length) * 0.075
 
         let seq = addPoint (0.0, 0.0) (String.concat "<br>" formatted) Seq.empty
-        List.fold (fun acc elem -> Seq.append acc (drawTreeChildren elem (0.0, 0.0, offset) seq)) seq st
+        List.fold (fun acc elem -> Seq.append acc (drawTreeChildren elem (0.0, 0.0, offset) Seq.empty)) seq st
 
     |> Chart.combine
     |> Chart.withXAxis mirroredXAxis
@@ -187,7 +185,7 @@ let drawTreeV2 t =
 
             let seq = addPoint (parentX + v, parentY - 1.0) (String.concat "<br>" formatted) seq
 
-            List.fold (fun acc elem -> Seq.append acc (drawTreeChildren elem (parentX + v, parentY - 1.0) seq)) seq st
+            List.fold (fun acc elem -> Seq.append acc (drawTreeChildren elem (parentX + v, parentY - 1.0) Seq.empty)) seq st
 
     // Starting at root - shouldnt draw a line
     match t with
@@ -206,12 +204,118 @@ let drawTreeV2 t =
         let (Node((_, vfirst), _)) = st.Head
         let (Node((_, vlast), _)) = (List.rev st).Head
         let seq = addLine (vfirst, -0.5) (vlast, -0.5) seq
-        List.fold (fun acc elem -> Seq.append acc (drawTreeChildren elem (0.0, 0.0) seq)) seq st
+        
+        List.fold (fun acc elem -> Seq.append acc (drawTreeChildren elem (0.0, 0.0) Seq.empty)) seq st
 
     |> Chart.combine
     |> Chart.withXAxis mirroredXAxis
     |> Chart.withYAxis mirroredYAxis
     |> Chart.show
 
+
+let largeTree =
+    Node(
+        "A", 
+        [ Node("B", [
+            Node("C", [
+                Node("D", []);
+                Node("E", [
+                    Node("F", [
+                        Node("G", []);
+                        Node("H", [
+                            Node("I", []);
+                            Node("J", []);
+                            Node("K", []);
+                            Node("L", [])
+                        ]);
+                        Node("M", []);
+                        Node("N", [
+                            Node("O", [])
+                        ])
+                    ])
+                ])
+            ]);
+            Node("P", [
+                Node("Q", []);
+                Node("R", [])
+            ])
+        ]);
+          Node("S", [
+            Node("T", [
+                Node("U", []);
+                Node("V", []);
+                Node("W", [
+                    Node("X", [
+                        Node("Y", [])
+                    ]);
+                    Node("Z", [
+                        Node("a", []);
+                        Node("b", []);
+                        Node("c", []);
+                        Node("d", [])
+                    ])
+                ])
+            ]);
+            Node("e", [
+                Node("f", [
+                    Node("g", [])
+                ]);
+                Node("h", []);
+                Node("i", [
+                    Node("j", [
+                        Node("k", []);
+                        Node("l", []);
+                        Node("m", []);
+                        Node("n", [])
+                    ])
+                ])
+            ])
+        ]);
+          Node("o", [
+            Node("p", [
+                Node("q", [
+                    Node("r", []);
+                    Node("s", []);
+                    Node("t", []);
+                    Node("u", [])
+                ]);
+                Node("v", [
+                    Node("w", []);
+                    Node("x", [
+                        Node("y", []);
+                        Node("z", [])
+                    ]);
+                    Node("0", []);
+                    Node("1", [])
+                ]);
+                Node("2", [])
+            ])
+          ])]
+    )
+
+let simpleTree =
+    Node(
+        "A", 
+        [ Node("B", [
+            Node("C", [
+                Node("D", []);
+                Node("E", [
+                    Node("F", [
+                        Node("G", []);
+                        Node("H", [
+                            Node("I", []);
+                            Node("J", []);
+                            Node("K", []);
+                            Node("L", [])
+                        ])
+                    ])
+                ])
+            ])
+        ])
+        ]
+    )
 let renderTree b t =
     if b then drawTreeV1 t else drawTreeV2 t
+
+printf "%A" (design largeTree)
+renderTree false (design largeTree)

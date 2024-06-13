@@ -92,7 +92,7 @@ module PlotTrees =
                     addLine (parentX, parentY - parentOffset) (parentX + v, parentY - 1.0 + offset) temp
 
                 List.fold
-                    (fun acc elem -> Seq.append acc (drawTreeChildren elem (parentX + v, parentY - 1.0, offset) seq))
+                    (fun acc elem -> Seq.append acc (drawTreeChildren elem (parentX + v, parentY - 1.0, offset)  Seq.empty))
                     seq
                     st
 
@@ -111,7 +111,7 @@ module PlotTrees =
                     (float formatted.Length) * 0.075
 
             let seq = addPoint (0.0, 0.0) (String.concat "<br>" formatted) Seq.empty
-            List.fold (fun acc elem -> Seq.append acc (drawTreeChildren elem (0.0, 0.0, offset) seq)) seq st
+            List.fold (fun acc elem -> Seq.append acc (drawTreeChildren elem (0.0, 0.0, offset)  Seq.empty)) seq st
 
         |> Chart.combine
         |> Chart.withXAxis mirroredXAxis
@@ -166,7 +166,7 @@ module PlotTrees =
                 let seq = addPoint (parentX + v, parentY - 1.0) (String.concat "<br>" formatted) seq
 
                 List.fold
-                    (fun acc elem -> Seq.append acc (drawTreeChildren elem (parentX + v, parentY - 1.0) seq))
+                    (fun acc elem -> Seq.append acc (drawTreeChildren elem (parentX + v, parentY - 1.0)  Seq.empty))
                     seq
                     st
 
@@ -187,7 +187,7 @@ module PlotTrees =
             let (Node((_, vfirst), _)) = st.Head
             let (Node((_, vlast), _)) = (List.rev st).Head
             let seq = addLine (vfirst, -0.5) (vlast, -0.5) seq
-            List.fold (fun acc elem -> Seq.append acc (drawTreeChildren elem (0.0, 0.0) seq)) seq st
+            List.fold (fun acc elem -> Seq.append acc (drawTreeChildren elem (0.0, 0.0)  Seq.empty)) seq st
 
         |> Chart.combine
         |> Chart.withXAxis mirroredXAxis
